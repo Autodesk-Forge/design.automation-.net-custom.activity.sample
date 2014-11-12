@@ -1,0 +1,140 @@
+﻿<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+  <edmx:DataServices m:DataServiceVersion="3.0" m:MaxDataServiceVersion="3.0" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+    <Schema Namespace="ACES.Models" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <EntityType Name="Activity">
+        <Key>
+          <PropertyRef Name="Id" />
+          <PropertyRef Name="UserId" />
+        </Key>
+        <Property Name="RequiredEngineVersion" Type="Edm.String" Nullable="false" />
+        <Property Name="Parameters" Type="ACES.Models.Parameters" Nullable="false" />
+        <Property Name="Instruction" Type="ACES.Models.Instruction" />
+        <Property Name="AllowedChildProcesses" Type="Collection(ACES.Models.AllowedChildProcess)" Nullable="false" />
+        <Property Name="Version" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Timestamp" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="UserId" Type="Edm.String" Nullable="false" />
+        <Property Name="Id" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="AppPackages" Relationship="ACES.Models.ACES_Models_Activity_AppPackages_ACES_Models_AppPackage_AppPackagesPartner" ToRole="AppPackages" FromRole="AppPackagesPartner" />
+      </EntityType>
+      <EntityType Name="AppPackage">
+        <Key>
+          <PropertyRef Name="Id" />
+          <PropertyRef Name="UserId" />
+        </Key>
+        <Property Name="Resource" Type="Edm.String" />
+        <Property Name="RequiredEngineVersion" Type="Edm.String" />
+        <Property Name="Version" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Timestamp" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="UserId" Type="Edm.String" Nullable="false" />
+        <Property Name="Id" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="References" Relationship="ACES.Models.ACES_Models_AppPackage_References_ACES_Models_AppPackage_ReferencesPartner" ToRole="References" FromRole="ReferencesPartner" />
+      </EntityType>
+      <EntityType Name="WorkItem">
+        <Key>
+          <PropertyRef Name="Id" />
+          <PropertyRef Name="UserId" />
+        </Key>
+        <Property Name="Arguments" Type="ACES.Models.Arguments" Nullable="false" />
+        <Property Name="Status" Type="Edm.String" />
+        <Property Name="StatusDetails" Type="ACES.Models.StatusDetails" />
+        <Property Name="AvailabilityZone" Type="Edm.String" />
+        <Property Name="ActivityId" Type="ACES.Models.EntityId" />
+        <Property Name="TimeQueued" Type="Edm.DateTime" />
+        <Property Name="TimeInputTransferStarted" Type="Edm.DateTime" />
+        <Property Name="TimeScriptStarted" Type="Edm.DateTime" />
+        <Property Name="TimeScriptEnded" Type="Edm.DateTime" />
+        <Property Name="TimeOutputTransferEnded" Type="Edm.DateTime" />
+        <Property Name="BytesTranferredIn" Type="Edm.Int64" />
+        <Property Name="BytesTranferredOut" Type="Edm.Int64" />
+        <Property Name="Version" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Timestamp" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="UserId" Type="Edm.String" Nullable="false" />
+        <Property Name="Id" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="Activity" Relationship="ACES.Models.ACES_Models_WorkItem_Activity_ACES_Models_Activity_ActivityPartner" ToRole="Activity" FromRole="ActivityPartner" />
+      </EntityType>
+      <EntityType Name="RemoteFile">
+        <Key>
+          <PropertyRef Name="Resource" />
+        </Key>
+        <Property Name="UserId" Type="Edm.String" />
+        <Property Name="Version" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Resource" Type="Edm.String" Nullable="false" />
+        <Property Name="LocalFileName" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="RelatedFiles" Relationship="ACES.Models.ACES_Models_RemoteFile_RelatedFiles_ACES_Models_RemoteFile_RelatedFilesPartner" ToRole="RelatedFiles" FromRole="RelatedFilesPartner" />
+      </EntityType>
+      <ComplexType Name="EntityId">
+        <Property Name="UserId" Type="Edm.String" />
+        <Property Name="Id" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="Parameters">
+        <Property Name="InputParameters" Type="Collection(ACES.Models.Parameter)" Nullable="false" />
+        <Property Name="OutputParameters" Type="Collection(ACES.Models.Parameter)" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="Arguments">
+        <Property Name="InputArguments" Type="Collection(ACES.Models.Argument)" Nullable="false" />
+        <Property Name="OutputArguments" Type="Collection(ACES.Models.Argument)" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="Parameter">
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="LocalFileName" Type="Edm.String" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="Instruction">
+        <Property Name="CommandLineParameters" Type="Edm.String" />
+        <Property Name="Script" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="AllowedChildProcess">
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="RelativePath" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="Argument">
+        <Property Name="Resource" Type="Edm.String" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="Authentication" Type="Edm.String" />
+        <Property Name="ResourceKind" Type="Edm.String" />
+        <Property Name="StorageProvider" Type="Edm.String" />
+        <Property Name="HttpVerb" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="StatusDetails">
+        <Property Name="Report" Type="Edm.String" />
+      </ComplexType>
+      <Association Name="ACES_Models_Activity_AppPackages_ACES_Models_AppPackage_AppPackagesPartner">
+        <End Type="ACES.Models.AppPackage" Role="AppPackages" Multiplicity="*" />
+        <End Type="ACES.Models.Activity" Role="AppPackagesPartner" Multiplicity="0..1" />
+      </Association>
+      <Association Name="ACES_Models_AppPackage_References_ACES_Models_AppPackage_ReferencesPartner">
+        <End Type="ACES.Models.AppPackage" Role="References" Multiplicity="*" />
+        <End Type="ACES.Models.AppPackage" Role="ReferencesPartner" Multiplicity="0..1" />
+      </Association>
+      <Association Name="ACES_Models_WorkItem_Activity_ACES_Models_Activity_ActivityPartner">
+        <End Type="ACES.Models.Activity" Role="Activity" Multiplicity="0..1" />
+        <End Type="ACES.Models.WorkItem" Role="ActivityPartner" Multiplicity="0..1" />
+      </Association>
+      <Association Name="ACES_Models_RemoteFile_RelatedFiles_ACES_Models_RemoteFile_RelatedFilesPartner">
+        <End Type="ACES.Models.RemoteFile" Role="RelatedFiles" Multiplicity="*" />
+        <End Type="ACES.Models.RemoteFile" Role="RelatedFilesPartner" Multiplicity="0..1" />
+      </Association>
+    </Schema>
+    <Schema Namespace="Default" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <EntityContainer Name="Container" m:IsDefaultEntityContainer="true">
+        <EntitySet Name="Activities" EntityType="ACES.Models.Activity" />
+        <EntitySet Name="AppPackages" EntityType="ACES.Models.AppPackage" />
+        <EntitySet Name="WorkItems" EntityType="ACES.Models.WorkItem" />
+        <FunctionImport Name="GenerateUploadUrl" ReturnType="Edm.String" IsBindable="true" m:IsAlwaysBindable="true">
+          <Parameter Name="bindingParameter" Type="Collection(ACES.Models.AppPackage)" Nullable="false" />
+        </FunctionImport>
+        <AssociationSet Name="ACES_Models_Activity_AppPackages_ACES_Models_AppPackage_AppPackagesPartnerSet" Association="ACES.Models.ACES_Models_Activity_AppPackages_ACES_Models_AppPackage_AppPackagesPartner">
+          <End Role="AppPackagesPartner" EntitySet="Activities" />
+          <End Role="AppPackages" EntitySet="AppPackages" />
+        </AssociationSet>
+        <AssociationSet Name="ACES_Models_AppPackage_References_ACES_Models_AppPackage_ReferencesPartnerSet" Association="ACES.Models.ACES_Models_AppPackage_References_ACES_Models_AppPackage_ReferencesPartner">
+          <End Role="ReferencesPartner" EntitySet="AppPackages" />
+          <End Role="References" EntitySet="AppPackages" />
+        </AssociationSet>
+        <AssociationSet Name="ACES_Models_WorkItem_Activity_ACES_Models_Activity_ActivityPartnerSet" Association="ACES.Models.ACES_Models_WorkItem_Activity_ACES_Models_Activity_ActivityPartner">
+          <End Role="ActivityPartner" EntitySet="WorkItems" />
+          <End Role="Activity" EntitySet="Activities" />
+        </AssociationSet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
