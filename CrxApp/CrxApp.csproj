@@ -30,13 +30,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="accoremgd">
-      <HintPath>M:\UDRIVE\DEVELOP\global\Debug64\bin\assemblyref\accoremgd.dll</HintPath>
+    <Reference Include="AcCoreMgd">
+      <HintPath>..\packages\AutoCAD.NET.Core.20.0.0\lib\45\AcCoreMgd.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="AcdbMgd">
-      <HintPath>M:\UDRIVE\DEVELOP\global\Debug64\bin\assemblyref\AcdbMgd.dll</HintPath>
+    <Reference Include="AcDbMgd">
+      <HintPath>..\packages\AutoCAD.NET.Model.20.0.0\lib\45\AcDbMgd.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="acdbmgdbrep">
+      <HintPath>..\packages\AutoCAD.NET.Model.20.0.0\lib\45\acdbmgdbrep.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -55,7 +58,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="PackageContents.xml">
