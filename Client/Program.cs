@@ -13,8 +13,8 @@ namespace Client
     class Credentials
     {
         //get your ConsumerKey/ConsumerSecret at http://developer.autodesk.com
-        public static string ConsumerKey = "Kfwk5IjyUil0r982oTFUNoZj7iYFwP5R";
-        public static string ConsumerSecret = "sCn631ujgakywaMe";
+        public static string ConsumerKey = "";
+        public static string ConsumerSecret = "";
     }
     class Program
     {
