@@ -131,6 +131,7 @@ namespace Client
                 package.Resource = url;
                 container.UpdateObject(package);
             }
+            container.SaveChanges(System.Data.Services.Client.SaveChangesOptions.PatchOnUpdate);
             return package;
         }
 
