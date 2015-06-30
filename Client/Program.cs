@@ -69,6 +69,9 @@ namespace Client
 
             //finally submit workitem against our activity
             SubmitWorkItem(activity);
+
+            // demo new features in V2 -- version control
+            DemoVersionControl();
         }
 
         static string GetToken()
@@ -122,7 +125,7 @@ namespace Client
                 package = new AppPackage()
                 {
                     Id = PackageName,
-                    RequiredEngineVersion = "20.0",
+                    RequiredEngineVersion = "20.1",
                     Resource = url
                 };
                 container.AddToAppPackages(package);
@@ -164,7 +167,7 @@ namespace Client
                     },
                     OutputParameters = { new Parameter() { Name = "Results", LocalFileName = "outputs" } }
                 },
-                RequiredEngineVersion = "20.0"
+                RequiredEngineVersion = "20.1"
             };
             activity.AppPackages.Add(PackageName); // reference the custom AppPackage
             container.AddToActivities(activity);
@@ -222,13 +225,14 @@ namespace Client
             container.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
             wi = container.WorkItems.ByKey(wi.Id).GetValue();
 
-            //Resource property of the output argument "Results" will have the output url
-            var url = wi.Arguments.OutputArguments.First(a => a.Name == "Results").Resource;
-            DownloadToDocs(url, "AIO.zip");
-
             //download the status report
-            url = wi.StatusDetails.Report;
-            DownloadToDocs(url, "AIO-report.txt");
+            var url = wi.StatusDetails.Report;
+            DownloadToDocs(url, @"AIO-report.txt");
+            
+            //Resource property of the output argument "Results" will have the output url
+            url = wi.Arguments.OutputArguments.First(a => a.Name == "Results").Resource;
+            DownloadToDocs(url, @"AIO.zip");
+
         }
 
         static void DownloadToDocs(string url, string localFile)
@@ -242,6 +246,31 @@ namespace Client
                 content.ReadAsStreamAsync().Result.CopyTo(output);
                 output.Close();
             }
+        }
+
+        static void DemoVersionControl()
+        {
+            // We have version control over submitted AppPackages/Activities. 
+            // You can set current version by calling container.AppPackages.ByKey(PackageName).SetVersion(number).Execute();
+            Console.WriteLine("We have version control over submitted AppPackages/Activities. Here is the version history of AppPackage with name \"{0}\":", PackageName);
+            var appPackages = container.AppPackages.ByKey(PackageName).GetVersions().Execute();
+
+            // send them to console 
+            var verList = new List<int>();
+            foreach (var app in appPackages)
+            {
+                verList.Add(app.Version);
+                Console.WriteLine("Version #: {0}.  Time Submitted: {1}.", app.Version, app.Timestamp);
+            }
+
+            // set the current version to the earlest version
+            verList.Sort();
+            int firstVersion = verList.First();
+            container.AppPackages.ByKey(PackageName).SetVersion(firstVersion).Execute();
+
+            // check the current version is the first version
+            var curAppPackage = container.AppPackages.ByKey(PackageName).GetValue();
+            System.Diagnostics.Debug.Assert(firstVersion == curAppPackage.Version);
         }
     }
 }
