@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.Compression;
 
+using AIO.Operations;
+using AIO.ACES.Models;
+
 namespace Client
 {
     class Credentials
@@ -22,16 +25,17 @@ namespace Client
         static readonly string PackageName = "MyTestPackage";
         static readonly string ActivityName = "MyTestActivity";
 
-        static AIO.Container container;
+        static Container container;
         static void Main(string[] args)
         {
             //instruct client side library to insert token as Authorization value into each request
-            container = new AIO.Container(new Uri("https://developer.api.autodesk.com/autocad.io/v1/"));
+            container = new Container(new Uri("https://developer.api.autodesk.com/autocad.io/us-east/v2/"));
             var token = GetToken();
             container.SendingRequest2 += (sender, e) => e.RequestMessage.SetHeader("Authorization", token);
 
             //check if our app package exists
-            var package = container.AppPackages.Where(a => a.Id == PackageName).FirstOrDefault();
+            AppPackage package = null;
+            try { package = container.AppPackages.ByKey(PackageName).GetValue(); } catch {}
             string res = null;
             if (package!=null)
                 res = Prompts.PromptForKeyword(string.Format("AppPackage '{0}' already exists. What do you want to do? [Recreate/Update/Leave]<Update>", PackageName));
@@ -45,7 +49,9 @@ namespace Client
                 package = CreateOrUpdatePackage(CreateZip(), package);
 
             //check if our activity already exist
-            var activity = container.Activities.Where(a => a.Id == ActivityName).FirstOrDefault();
+            Activity activity = null;
+            try { activity = container.Activities.ByKey(ActivityName).GetValue(); }
+            catch { }
             if (activity != null)
             {
                 if (Prompts.PromptForKeyword(string.Format("Activity '{0}' already exists. Do you want to recreate it? [Yes/No]<No>", ActivityName)) == "Yes")
@@ -59,10 +65,13 @@ namespace Client
                 activity = CreateActivity(package);
 
             //save outstanding changes if any
-            container.SaveChanges(System.Data.Services.Client.SaveChangesOptions.PatchOnUpdate);
+            container.SaveChanges();
 
             //finally submit workitem against our activity
             SubmitWorkItem(activity);
+
+            // demo new features in V2 -- version control
+            DemoVersionControl();
         }
 
         static string GetToken()
@@ -101,13 +110,11 @@ namespace Client
 
         }
 
-        static AIO.AppPackage CreateOrUpdatePackage(string zip, AIO.AppPackage package)
+        static AppPackage CreateOrUpdatePackage(string zip, AppPackage package)
         {
             Console.WriteLine("Creating/Updating AppPackage...");
             // First step -- query for the url to upload the AppPackage file
-            UriBuilder builder = new UriBuilder(container.BaseUri);
-            builder.Path += "AppPackages/GenerateUploadUrl";
-            var url = container.Execute<string>(builder.Uri, "POST", true, null).First();
+            var url = container.AppPackages.GetUploadUrl().GetValue();
 
             // Second step -- upload AppPackage file
             UploadObject(url, zip);
@@ -115,12 +122,10 @@ namespace Client
             if (package == null)
             {
                 // third step -- after upload, create the AppPackage entity
-                package = new AIO.AppPackage()
+                package = new AppPackage()
                 {
-                    UserId = "",
                     Id = PackageName,
-                    Version = 1,
-                    RequiredEngineVersion = "20.0",
+                    RequiredEngineVersion = "20.1",
                     Resource = url
                 };
                 container.AddToAppPackages(package);
@@ -145,69 +150,63 @@ namespace Client
 
         //creates an activity with 2 inputs and variable number of outputs. All outsputs are places
         //in a folder 'outputs'
-        static AIO.Activity CreateActivity(AIO.AppPackage package)
+        static Activity CreateActivity(AppPackage package)
         {
             Console.WriteLine("Creating/Updating Activity...");
-            var activity = new AIO.Activity()
+            var activity = new Activity()
             {
-                UserId = "",
                 Id = ActivityName,
-                Version = 1,
-                Instruction = new AIO.Instruction()
+                Instruction = new Instruction()
                 {
                     Script = "_test params.json outputs\n"
                 },
-                Parameters = new AIO.Parameters()
+                Parameters = new Parameters()
                 {
                     InputParameters = {
-                        new AIO.Parameter() { Name = "HostDwg", LocalFileName = "$(HostDwg)" },
-                        new AIO.Parameter() { Name = "Params", LocalFileName = "params.json" },
+                        new Parameter() { Name = "HostDwg", LocalFileName = "$(HostDwg)" },
+                        new Parameter() { Name = "Params", LocalFileName = "params.json" },
                     },
-                    OutputParameters = { new AIO.Parameter() { Name = "Results", LocalFileName = "outputs" } }
+                    OutputParameters = { new Parameter() { Name = "Results", LocalFileName = "outputs" } }
                 },
-                RequiredEngineVersion = "20.0"
+                RequiredEngineVersion = "20.1"
             };
+            activity.AppPackages.Add(PackageName); // reference the custom AppPackage
             container.AddToActivities(activity);
-            container.SaveChanges(System.Data.Services.Client.SaveChangesOptions.PatchOnUpdate);
-            //establish link to package
-            container.AddLink(activity, "AppPackages", package);
             container.SaveChanges();
             return activity;
         }
         
-        static void SubmitWorkItem(AIO.Activity activity)
+        static void SubmitWorkItem(Activity activity)
         {
             Console.WriteLine("Submitting workitem...");
             //create a workitem
-            var wi = new AIO.WorkItem()
+            var wi = new WorkItem()
             {
-                UserId = "", //must be set to empty
                 Id = "", //must be set to empty
-                Arguments = new AIO.Arguments(),
-                Version = 1, //should always be 1
-                ActivityId = new AIO.EntityId { Id= activity.Id, UserId = activity.UserId }
+                Arguments = new Arguments(),
+                ActivityId = activity.Id 
             };
 
-            wi.Arguments.InputArguments.Add(new AIO.Argument()
+            wi.Arguments.InputArguments.Add(new Argument()
             {
                 Name = "HostDwg",// Must match the input parameter in activity
                 Resource = "http://download.autodesk.com/us/samplefiles/acad/blocks_and_tables_-_imperial.dwg",
-                StorageProvider = "Generic" //Generic HTTP download (as opposed to A360)
+                StorageProvider = StorageProvider.Generic //Generic HTTP download (as opposed to A360)
             });
-            wi.Arguments.InputArguments.Add(new AIO.Argument()
+            wi.Arguments.InputArguments.Add(new Argument()
             {
                 Name = "Params",// Must match the input parameter in activity
-                ResourceKind = "Embedded", //use data URL to send json parameters without having to upload them to storage
+                ResourceKind = ResourceKind.Embedded, //use data URL to send json parameters without having to upload them to storage
                 Resource = @"data:application/json, "+ JsonConvert.SerializeObject(new CrxApp.Parameters { ExtractBlockNames = true, ExtractLayerNames = true }),
-                StorageProvider = "Generic" //Generic HTTP download (as opposed to A360)
+                StorageProvider = StorageProvider.Generic //Generic HTTP download (as opposed to A360)
             });
-            wi.Arguments.OutputArguments.Add(new AIO.Argument()
+            wi.Arguments.OutputArguments.Add(new Argument()
             {
                 Name = "Results", //must match the output parameter in activity
-                StorageProvider = "Generic", //Generic HTTP upload (as opposed to A360)
-                HttpVerb = "POST", //use HTTP POST when delivering result
+                StorageProvider = StorageProvider.Generic, //Generic HTTP upload (as opposed to A360)
+                HttpVerb = HttpVerbType.POST, //use HTTP POST when delivering result
                 Resource = null, //use storage provided by AutoCAD.IO
-                ResourceKind = "ZipPackage" //upload files as zip package in output directory
+                ResourceKind = ResourceKind.ZipPackage //upload files as zip package in output directory
             });
 
             container.AddToWorkItems(wi);
@@ -221,19 +220,20 @@ namespace Client
                 container.LoadProperty(wi, "Status"); //http request is made here
                 Console.WriteLine("WorkItem status: {0}", wi.Status);
             }
-            while (wi.Status == "Pending" || wi.Status == "InProgress");
+            while (wi.Status == ExecutionStatus.Pending || wi.Status == ExecutionStatus.InProgress);
 
             //re-query the service so that we can look at the details provided by the service
-            container.MergeOption = System.Data.Services.Client.MergeOption.OverwriteChanges;
-            wi = container.WorkItems.Where(p => p.UserId == wi.UserId && p.Id == wi.Id).First();
-
-            //Resource property of the output argument "Results" will have the output url
-            var url = wi.Arguments.OutputArguments.First(a => a.Name == "Results").Resource;
-            DownloadToDocs(url, "AIO.zip");
+            container.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
+            wi = container.WorkItems.ByKey(wi.Id).GetValue();
 
             //download the status report
-            url = wi.StatusDetails.Report;
-            DownloadToDocs(url, "AIO-report.txt");
+            var url = wi.StatusDetails.Report;
+            DownloadToDocs(url, @"AIO-report.txt");
+            
+            //Resource property of the output argument "Results" will have the output url
+            url = wi.Arguments.OutputArguments.First(a => a.Name == "Results").Resource;
+            DownloadToDocs(url, @"AIO.zip");
+
         }
 
         static void DownloadToDocs(string url, string localFile)
@@ -247,6 +247,31 @@ namespace Client
                 content.ReadAsStreamAsync().Result.CopyTo(output);
                 output.Close();
             }
+        }
+
+        static void DemoVersionControl()
+        {
+            // We have version control over submitted AppPackages/Activities. 
+            // You can set current version by calling container.AppPackages.ByKey(PackageName).SetVersion(number).Execute();
+            Console.WriteLine("We have version control over submitted AppPackages/Activities. Here is the version history of AppPackage with name \"{0}\":", PackageName);
+            var appPackages = container.AppPackages.ByKey(PackageName).GetVersions().Execute();
+
+            // send them to console 
+            var verList = new List<int>();
+            foreach (var app in appPackages)
+            {
+                verList.Add(app.Version);
+                Console.WriteLine("Version #: {0}.  Time Submitted: {1}.", app.Version, app.Timestamp);
+            }
+
+            // set the current version to the earlest version
+            verList.Sort();
+            int firstVersion = verList.First();
+            container.AppPackages.ByKey(PackageName).SetVersion(firstVersion).Execute();
+
+            // check the current version is the first version
+            var curAppPackage = container.AppPackages.ByKey(PackageName).GetValue();
+            System.Diagnostics.Debug.Assert(firstVersion == curAppPackage.Version);
         }
     }
 }
