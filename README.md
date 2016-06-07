@@ -1,4 +1,4 @@
-#AutoCAD IO V2 API C# samples -- Create custom Activity and AppPackage
+# Design Automation (called AutoCAD IO in the past) V2 API C# samples -- Create custom Activity and AppPackage
 
 [![.net](https://img.shields.io/badge/.net-4.5-green.svg)](http://www.microsoft.com/en-us/download/details.aspx?id=30653)
 [![odata](https://img.shields.io/badge/odata-4.0-yellow.svg)](http://www.odata.org/documentation/)
@@ -7,15 +7,20 @@
 
 ##Description
 This is C# sample to demonstrate custom Activities and AppPackages creation. This is the most
-common use case.
+common use case that the AutoCAD.IO can run the custom command (defined in the custom package) on the cloud.
 
 ##Dependencies
 
-Visual Studio 2013.
+* Visual Studio 2012, 2013. 2015 should be also fine, but not yet been tested.
+* [ObjectARX SDK] (http://usa.autodesk.com/adsk/servlet/index?siteID=123112&id=773204). The SDK version depends on which AutoCAD verison you want to test with the AppPackage locally. In current test, the version is 2016.
 
 ##Setup/Usage Instructions
+* Unzip ObjectARX SDK. Add AcCoreMgd, AcDbMgd and acdbmgdbrep from SDK/inc to the the project CrxApp.
+* NuGet the Newtonsoft.json package to project CrxApp
+* Restore the packages of project Client by [NuGet](https://www.nuget.org/). The simplest way is right click of the project>>"Manage NuGet Packages for Solution" >> "Restore" (top right of dialog)
+* Apply credencials of AutoCAD.IO from https://developer.autodesk.com/. Put your consumer key and secret key at  line 19 and 20 of [program.cs](Client/Program.cs) 
 
-Please refer to [AutoCAD.IO V2 API documentation](https://developer.autodesk.com/api/autocadio/v2/#tutorials).
+Please refer to [AutoCAD.IO V2 API documentation](https://developer.autodesk.com/api/autocadio/v2/#tutorials) for more information such as how to setup a project with AutoCAD.IO.
 
 ## Questions
 
