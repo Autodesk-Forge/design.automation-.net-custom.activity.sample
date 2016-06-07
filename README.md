@@ -17,8 +17,8 @@ common use case that the AutoCAD.IO can run the custom command (defined in the c
 
 ##Setup/Usage Instructions
 * Unzip ObjectARX SDK. Add AcCoreMgd, AcDbMgd and acdbmgdbrep from SDK/inc to the the project **CrxApp**.  "Copy Local" = False.
-* NuGet the Newtonsoft.json package to project CrxApp.
-* Build project **CrxApp**. It is better test with local AutoCAD to verify the process. Steps:
+* NuGet the Newtonsoft.json package to project **CrxApp**.
+* Build project **CrxApp**. It is better to test with local AutoCAD to verify the process. Steps:
   * Open AutoCAD (in this test, the version is 2016)
   * Open [demo drawing](demofiles/demodrawing.dwg). Run command "netload", select the binary dll of CrxApp. Allow AutoCAD to load it.
   * Run command "test", select [demo json file](demofiles/demojson.json). Specify a output folder. 
