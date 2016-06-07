@@ -25,7 +25,7 @@ common use case that the AutoCAD.IO can run the custom command (defined in the c
 * Restore the packages of project **Client** by [NuGet](https://www.nuget.org/). The simplest way is right click of the project>>"Manage NuGet Packages for Solution" >> "Restore" (top right of dialog)
 * Apply credencials of AutoCAD.IO from https://developer.autodesk.com/. Put your consumer key and secret key at  line 19 and 20 of [program.cs](Client/Program.cs) 
 * Run project **Client**, you will see a status in the console:
-[![](demofiles/IORunning.png.png)] 
+[![](demofiles/IORunning.png)] 
 * if everything works well, a zip file and a report file will be downloaded at **MyDocuments**.
 * if there is any error with the process, check the report file what error is indicated in the process.
 
