@@ -23,7 +23,7 @@ common use case that the AutoCAD.IO can run the custom command (defined in the c
   * Open [demo drawing](demofiles/demodrawing.dwg). Run command "netload", select the binary dll of CrxApp. Allow AutoCAD to load it.
   * Run command "test", select [demo json file](demofiles/demojson.json). Specify a output folder. 
   * Finally the blocks name list and layers name list will dumped out.
-* Restore the packages of project **Client** by [NuGet](https://www.nuget.org/). The simplest way is right click of the project>>"Manage NuGet Packages for Solution" >> "Restore" (top right of dialog)
+* Restore the packages of project **Client** by [NuGet](https://www.nuget.org/). The simplest way is to right click the project>>"Manage NuGet Packages for Solution" >> "Restore" (top right of dialog)
 * Apply credencials of AutoCAD.IO from https://developer.autodesk.com/. Put your consumer key and secret key at  line 19 and 20 of [program.cs](Client/Program.cs) 
 * Run project **Client**, you will see a status in the console:
 [![](demofiles/IORunning.png)] 
