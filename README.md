@@ -31,7 +31,7 @@ common use case that the Design Automation API can run the custom command (defin
 * if everything works well,  some result files (pdf, zip) and the report files will be downloaded to **MyDocuments**.
 * if there is any error with the process, check the report file what error is indicated.
 
-Please refer to [Design Automation API v2 API documentation](https://developer.autodesk.com/api/autocadio/v2/#tutorials) for more information such as how to setup a project.
+Please refer to [Design Automation API v2 API documentation](https://developer.autodesk.com/en/docs/design-automation/v2/overview/) for more information such as how to setup a project.
 
 ## Questions
 
