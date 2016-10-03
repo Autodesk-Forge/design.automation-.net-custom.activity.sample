@@ -35,43 +35,36 @@ namespace Client
 
             //check if our app package exists
             AppPackage package = null;
-            try { package = container.AppPackages.ByKey(PackageName).GetValue(); } catch {}
-            string res = null;
+            var packageQ = container.AppPackages.ByKey(PackageName);
+            try { package = packageQ.GetValue(); } catch { }
+            string res = "New";
             if (package!=null)
-                res = Prompts.PromptForKeyword(string.Format("AppPackage '{0}' already exists. What do you want to do? [Recreate/Update/Leave]<Update>", PackageName));
-            if (res == "Recreate")
             {
-                container.DeleteObject(package);
-                container.SaveChanges();
-                package = null;
+                res = PromptVersions(package.Version, packageQ.GetVersions().RequestUri, 
+                    packageQ.SetVersion(0).RequestUri, token);
             }       
-            if (res!="Leave")
+            if (res=="New")
                 package = CreateOrUpdatePackage(CreateZip(), package);
 
-            //check if our activity already exist
+            //check if our activity already exists
             Activity activity = null;
-            try { activity = container.Activities.ByKey(ActivityName).GetValue(); }
+            var activityQ = container.Activities.ByKey(ActivityName);
+            try { activity = activityQ.GetValue(); }
             catch { }
+            res = "New";
             if (activity != null)
             {
-                if (Prompts.PromptForKeyword(string.Format("Activity '{0}' already exists. Do you want to recreate it? [Yes/No]<No>", ActivityName)) == "Yes")
-                {
-                    container.DeleteObject(activity);
-                    container.SaveChanges();
-                    activity  = null;
+                res = PromptVersions(package.Version, activityQ.GetVersions().RequestUri, 
+                    activityQ.SetVersion(0).RequestUri, token);
                 }
-            }
-            if (activity == null)
-                activity = CreateActivity(package);
+            if (res == "New")
+                activity = CreateOrUpdateActivity(activity, PackageName);
 
             //save outstanding changes if any
             container.SaveChanges();
 
             //finally submit workitem against our activity
             SubmitWorkItem(activity);
-
-            // demo new features in V2 -- version control
-            DemoVersionControl();
         }
 
         static string GetToken()
@@ -90,6 +83,34 @@ namespace Client
                 var resValues = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseContent);
                 return resValues["token_type"] + " " + resValues["access_token"];
             }
+        }
+
+        static string PromptVersions(int curVer, Uri getVersions, Uri setVersion, string token)
+        {
+            // We have multiple versions of the is package already, retrieve all versions and show the current
+            Console.WriteLine("'{0}' already exists. The following versions are available:", PackageName);
+            int min = int.MaxValue;
+            int max = int.MinValue;
+
+            var cont = new Container(new Uri("https://developer.api.autodesk.com/autocad.io/us-east/v2/"));
+            cont.SendingRequest2 += (sender, e) => e.RequestMessage.SetHeader("Authorization", token);
+
+            foreach (dynamic item in cont.Execute<dynamic>(getVersions))
+            {
+                if (item.Version > max)
+                    max = item.Version;
+                if (item.Version < min)
+                    min = item.Version;
+                Console.WriteLine("Version #: {0}.Time Submitted: {1}.", item.Version, item.Timestamp);
+            }
+            Console.WriteLine("Current={0}", curVer);
+            var res = Prompts.PromptForKeyword("What do you want to do? [New/SetCurrent/Leave]<New>");
+            if (res == "SetCurrent")
+            {
+                var ver = Prompts.PromptForNumber("Choose a version", min, max);
+                container.Execute(setVersion, "POST", new Microsoft.OData.Client.BodyOperationParameter("Version", ver));
+            }
+            return res;
         }
         static string CreateZip()
         {
@@ -151,28 +172,35 @@ namespace Client
 
         //creates an activity with 2 inputs and variable number of outputs. All outsputs are places
         //in a folder 'outputs'
-        static Activity CreateActivity(AppPackage package)
+        static Activity CreateOrUpdateActivity(Activity activity, string packageName)
         {
             Console.WriteLine("Creating/Updating Activity...");
-            var activity = new Activity()
+            bool newlyCreated = false;
+            if (activity == null)
             {
-                Id = ActivityName,
-                Instruction = new Instruction()
+                activity = new Activity() { Id = ActivityName };
+                newlyCreated = true;
+            }
+            activity.Instruction = new Instruction()
                 {
                     Script = "_test params.json outputs\n"
-                },
-                Parameters = new Parameters()
+                };
+            activity.Parameters = new Parameters()
                 {
                     InputParameters = {
                         new Parameter() { Name = "HostDwg", LocalFileName = "$(HostDwg)" },
                         new Parameter() { Name = "Params", LocalFileName = "params.json" },
                     },
                     OutputParameters = { new Parameter() { Name = "Results", LocalFileName = "outputs" } }
-                },
-                RequiredEngineVersion = "21.0"
-            };
-            activity.AppPackages.Add(PackageName); // reference the custom AppPackage
-            container.AddToActivities(activity);
+                };
+            activity.RequiredEngineVersion = "21.0";
+            if (newlyCreated)
+            {
+                activity.AppPackages.Add(packageName); // reference the custom AppPackage
+                container.AddToActivities(activity);
+            }
+            else
+                container.UpdateObject(activity);
             container.SaveChanges();
             return activity;
         }

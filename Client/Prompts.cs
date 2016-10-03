@@ -48,7 +48,20 @@ namespace Client
                 if (prompt.TryMatch(resp, out ret))
                     return ret;
             }
-
+        }
+        public static int PromptForNumber(string promptString, int min, int max)
+        {
+            while (true)
+            {
+                Console.Write("{0}[{1}..{2}]:", promptString, min, max);
+                var resp = Console.ReadLine();
+                int res;
+                if (int.TryParse(resp, out res))
+                {
+                    if (res >= min && res <= max)
+                        return res;
+                }
+            }
         }
     }
 }
