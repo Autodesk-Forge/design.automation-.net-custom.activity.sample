@@ -83,6 +83,7 @@ namespace Client
                 values.Add(new KeyValuePair<string, string>("client_id", Credentials.ConsumerKey));
                 values.Add(new KeyValuePair<string, string>("client_secret", Credentials.ConsumerSecret));
                 values.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
+                values.Add(new KeyValuePair<string, string>("scope", "code:all"));
                 var requestContent = new FormUrlEncodedContent(values);
                 var response = client.PostAsync("https://developer.api.autodesk.com/authentication/v1/authenticate", requestContent).Result;
                 var responseContent = response.Content.ReadAsStringAsync().Result;
@@ -125,7 +126,7 @@ namespace Client
                 package = new AppPackage()
                 {
                     Id = PackageName,
-                    RequiredEngineVersion = "20.1",
+                    RequiredEngineVersion = "21.0",
                     Resource = url
                 };
                 container.AddToAppPackages(package);
@@ -168,7 +169,7 @@ namespace Client
                     },
                     OutputParameters = { new Parameter() { Name = "Results", LocalFileName = "outputs" } }
                 },
-                RequiredEngineVersion = "20.1"
+                RequiredEngineVersion = "21.0"
             };
             activity.AppPackages.Add(PackageName); // reference the custom AppPackage
             container.AddToActivities(activity);
