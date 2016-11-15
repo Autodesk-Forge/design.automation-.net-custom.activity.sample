@@ -31,15 +31,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AcCoreMgd, Version=21.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoCAD.NET.Core.21.0.1\lib\45\AcCoreMgd.dll</HintPath>
+      <HintPath>..\packages\AutoCAD.NET.Core.21.0.2\lib\45\AcCoreMgd.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="AcDbMgd, Version=21.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoCAD.NET.Model.21.0.1\lib\45\AcDbMgd.dll</HintPath>
+      <HintPath>..\packages\AutoCAD.NET.Model.21.0.2\lib\45\AcDbMgd.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="AcDbMgdBrep, Version=21.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoCAD.NET.Model.21.0.1\lib\45\AcDbMgdBrep.dll</HintPath>
+      <HintPath>..\packages\AutoCAD.NET.Model.21.0.2\lib\45\AcDbMgdBrep.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
