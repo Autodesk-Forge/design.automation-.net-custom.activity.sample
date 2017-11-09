@@ -25,7 +25,7 @@ common use case that the Design Automation API can run the custom command (defin
   * Finally the blocks name list and layers name list will dumped out.
 * Apply credencials of Design Automation API from https://developer.autodesk.com/. Put your consumer key and secret key at  line 19 and 20 of [program.cs](Client/Program.cs) 
 * Run project **Client**, you will see a status in the console:
-[![](demofiles/IORunning.png)] 
+![thumbnail](demofiles/IORunning.png)
 * if everything works well,  some result files (pdf, zip) and the report files will be downloaded to **MyDocuments**.
 * if there is any error with the process, check the report file what error is indicated.
 
