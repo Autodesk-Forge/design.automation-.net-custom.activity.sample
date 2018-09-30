@@ -39,7 +39,7 @@ common use case that the Design Automation API can run the custom command (defin
 3. Put your Forge credentials in [program.cs](./Program.cs) 
 4. Run project **Client**, you will see a status in the console:
 ![thumbnail](demofiles/IORunning.png)
-5. if everything works well,  some result files (pdf, zip) and the report files will be downloaded to **MyDocuments**.
+5. if everything works well,  the result zip file and the report files will be downloaded to **MyDocuments**. In zip file, blocks list and layers list are available.
 6. if there is any error with the process of work item, check the report file what error is indicated. 
 
 ## Troubleshooting
