@@ -4,7 +4,7 @@
 [![.net](https://img.shields.io/badge/.net-4.5-green.svg)](http://www.microsoft.com/en-us/download/details.aspx?id=30653)
 [![odata](https://img.shields.io/badge/odata-4.0-yellow.svg)](http://www.odata.org/documentation/)
 [![Design Automation](https://img.shields.io/badge/Design%20Automation-v2-green.svg)](http://developer.autodesk.com/)
-[![visual studio](https://img.shields.io/badge/Visual%20Studio-2012%7C2013%7C2015-brightgreen.svg)](https://www.visualstudio.com/)
+[![visual studio](https://img.shields.io/badge/visual%20studio-2015%2F2017-yellowgreen.svg)](https://www.visualstudio.com/)
 [![License](https://img.shields.io/:license-mit-red.svg)](http://opensource.org/licenses/MIT)
 
 ##Description
@@ -20,7 +20,7 @@ common use case that the Design Automation API can run the custom command (defin
 ## Setup
 
 ### Dependencies 
-* Download and install [Visual Studio](https://visualstudio.microsoft.com/downloads/) 
+* Download and install [Visual Studio](https://visualstudio.microsoft.com/downloads/). In the latest test, Visual Studio version is 2017.
 * Download and install [AutoCAD SDK](https://www.autodesk.com/developer-network/platform-technologies/autocad). In the latest test with this sample, AutoCAD version is 2018.
 
 ### Prerequisites
