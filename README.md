@@ -45,6 +45,10 @@ common use case that the Design Automation API can run the custom command (defin
 ## Troubleshooting
 * if any problem when building the project [CrxApp](CrxApp), check if the NET Framework of project is compatible with that of AutoCAD References. e.g. with AutoCAD 2018 references, the NET Framework is 4.6.1
 
+## Known Issues
+* as of writing, Design Automation of Forge is released with version 2. Odata is used with .NET project. In futher version, OData might not be used. 
+
+
 ## Further Reading 
 * [Design Automation API help](https://forge.autodesk.com/en/docs/design-automation/v2/developers_guide/overview/)
  * [ Intro to Design Automation API Video](https://www.youtube.com/watch?v=GWsJM344CJE&t=107s)
