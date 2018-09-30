@@ -11,29 +11,43 @@
 This is C# sample to demonstrate custom Activities and AppPackages creation. This is the most
 common use case that the Design Automation API can run the custom command (defined in the custom package) in the cloud.
 
-##Dependencies
+## Thumbnail
+![thumbnail](/thumbnail.png) 
 
-* Visual Studio 2012, 2013 or 2015.
-* AutocAD 2017 (if you want to test your app locally) 
+## Industry Background
+* to batch extract layers list and blocks list from the AutoCAD drawing by web services, instead of running plugin in local AutoCAD.
 
-##Setup/Usage Instructions
-* Build the solution (this will download dependencies from Nuget.org
-* Build project **CrxApp**. It is better to test with local AutoCAD to verify the process. Steps:
-  * Open AutoCAD (in this test, the version is 2017)
+## Setup
+
+### Dependencies 
+* Download and install [Visual Studio](https://visualstudio.microsoft.com/downloads/) 
+* Download and install [AutoCAD SDK](https://www.autodesk.com/developer-network/platform-technologies/autocad). In the latest test with this sample, AutoCAD version is 2018.
+
+### Prerequisites
+1. **Forge Account**: Learn how to create a Forge Account, activate subscription and create an app at [this tutorial](http://learnforge.autodesk.io/#/account/). Make sure to select the service **Design Automation**.
+2. Make a note with the credentials (client id and client secret) of the app. 
+
+## Running locally  
+1. Build project **CrxApp**. It is better to test with local AutoCAD to verify the process. Steps:
+  * Open AutoCAD (in the latest test, the version of AutoCAD is 2018)
   * Open [demo drawing](demofiles/demodrawing.dwg). Run command "netload", select the binary dll of CrxApp. Allow AutoCAD to load it.
   * Run command "test", select [demo json file](demofiles/demojson.json). Specify a output folder. 
   * Finally the blocks name list and layers name list will dumped out.
-* Apply credencials of Design Automation API from https://developer.autodesk.com/. Put your consumer key and secret key at  line 19 and 20 of [program.cs](Client/Program.cs) 
-* Run project **Client**, you will see a status in the console:
+2. Open project **Client**. Restore the packages of the project by [NuGet](https://www.nuget.org/. The simplest way is
+  * VS2012: Projects tab >> Enable NuGet Package Restore. Then right click the project>>"Manage NuGet Packages for Solution" >> "Restore" (top right of dialog)
+  * VS2013/VS2015/2017:  right click the project>>"Manage NuGet Packages for Solution" >> "Restore" (top right of dialog)
+3. Put your Forge credentials in [program.cs](./Program.cs) 
+4. Run project **Client**, you will see a status in the console:
 ![thumbnail](demofiles/IORunning.png)
-* if everything works well,  some result files (pdf, zip) and the report files will be downloaded to **MyDocuments**.
-* if there is any error with the process, check the report file what error is indicated.
+5. if everything works well,  some result files (pdf, zip) and the report files will be downloaded to **MyDocuments**.
+6. if there is any error with the process of work item, check the report file what error is indicated. 
 
-Please refer to [Design Automation API v2 API documentation](https://developer.autodesk.com/en/docs/design-automation/v2/overview/) for more information such as how to setup a project.
+## Troubleshooting
+* if any problem when building the project [CrxApp](CrxApp), check if the NET Framework of project is compatible with that of AutoCAD References. e.g. with AutoCAD 2018 references, the NET Framework is 4.6.1
 
-## Questions
-
-Please post your question at our [forum](https://developer.autodesk.com/en/support/get-help).
+## Further Reading 
+* [Design Automation API help](https://forge.autodesk.com/en/docs/design-automation/v2/developers_guide/overview/)
+ * [ Intro to Design Automation API Video](https://www.youtube.com/watch?v=GWsJM344CJE&t=107s)
 
 ## License
 
