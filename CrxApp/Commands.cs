@@ -1,12 +1,7 @@
-﻿using Autodesk.AutoCAD.Runtime;
-using Autodesk.AutoCAD.ApplicationServices.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
+﻿using Autodesk.AutoCAD.ApplicationServices.Core;
+using Autodesk.AutoCAD.Runtime;
 using Newtonsoft.Json;
+using System.IO;
 
 [assembly: CommandClass(typeof(CrxApp.Commands))]
 [assembly: ExtensionApplication(null)]
