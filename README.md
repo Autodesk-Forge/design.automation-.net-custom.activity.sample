@@ -45,11 +45,12 @@ common use case that the Design Automation API can run the custom command (defin
     }
 }
 ```
-4. Replace the upload URL with your own [here](Client/App.cs#L59).
-5. Run project **Client**, you will see a status in the console:
+4. Add your [friendly name](ClientApp/#L23) for your app.
+5. Replace the [upload URL](Client/App.cs#L24) with your own.
+6. Run project **Client**, you will see a status in the console:
 ![thumbnail](demofiles/IORunning.png)
-6. if everything works well,  the result zip file and the report files will be downloaded to **MyDocuments**. In zip file, blocks list and layers list are available.
-7. if there is any error with the process of work item, check the report file what error is indicated. 
+7. if everything works well,  the result zip file and the report files will be downloaded to **MyDocuments**. In zip file, blocks list and layers list are available.
+8. if there is any error with the process of work item, check the report file what error is indicated. 
 
 ## Troubleshooting
 * if any problem when building the project [CrxApp](CrxApp), check if the NET Framework of project is compatible with that of AutoCAD References. e.g. with AutoCAD 2018 references, the NET Framework is 4.6.1

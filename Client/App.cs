@@ -20,7 +20,8 @@ namespace Client
 
         static readonly string PackageName = "MyTestPackage";
         static readonly string ActivityName = "MyTestActivity";
-        static readonly string Owner = "MyFriendlyName";
+        static readonly string Owner = ""; //e.g. MyTestApp (it must be *globally* unique)
+        static readonly string UploadUrl = ""; //e.g. https://dasdev-testing.s3.us-west-2.amazonaws.com/result.zip?X-Amz-Expires=176332&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIZLLKUTZMHO46VTQ/20190120/us-west-2/s3/aws4_request&X-Amz-Date=20190120T042608Z&X-Amz-SignedHeaders=host&X-Amz-Signature=983054fe67ee9575d32fcd293772057b1d246a1d85174924d14468a3b49eb443
         static readonly string Label = "prod";
         static readonly string TargetEngine = "Autodesk.AutoCAD+23";
 
@@ -33,6 +34,18 @@ namespace Client
         }
         public async Task RunAsync()
         {
+            if (string.IsNullOrEmpty(Owner))
+            {
+                Console.WriteLine("Please provide non-empty Owner.");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(UploadUrl))
+            {
+                Console.WriteLine("Please provide non-empty UploadUrl.");
+                return;
+            }
+
             if (!await SetupOwnerAsync())
             {
                 Console.WriteLine("Exiting.");
@@ -56,7 +69,7 @@ namespace Client
                     { "input", new XrefTreeArgument() { Url = "http://download.autodesk.com/us/samplefiles/acad/blocks_and_tables_-_imperial.dwg" } },
                     { "params", new XrefTreeArgument() { Url = $"data:application/json, {JsonConvert.SerializeObject(new CrxApp.Parameters { ExtractBlockNames = true, ExtractLayerNames = true })}" } },
                     //TODO: replace it with your own URL
-                    { "result", new XrefTreeArgument() { Verb=Verb.Put, Url = "https://dasdev-testing.s3.us-west-2.amazonaws.com/result.zip?X-Amz-Expires=176332&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIZLLKUTZMHO46VTQ/20190120/us-west-2/s3/aws4_request&X-Amz-Date=20190120T042608Z&X-Amz-SignedHeaders=host&X-Amz-Signature=983054fe67ee9575d32fcd293772057b1d246a1d85174924d14468a3b49eb443" } }
+                    { "result", new XrefTreeArgument() { Verb=Verb.Put, Url = UploadUrl } }
                 }
             });
 
@@ -179,26 +192,13 @@ namespace Client
             if (nickname == config.ClientId)
             {
                 Console.WriteLine("\tNo nickname for this clientId yet. Attempting to create one...");
-                bool tryAgain;
                 HttpResponseMessage resp;
-                do
+                resp = await api.ForgeAppsApi.CreateNicknameAsync("me", new NicknameRecord() { Nickname = Owner }, throwOnError: false);
+                if (resp.StatusCode == HttpStatusCode.Conflict)
                 {
-                    tryAgain = false;
-                    resp = await api.ForgeAppsApi.CreateNicknameAsync("me", new NicknameRecord() { Nickname = Owner }, throwOnError: false);
-                    if (resp.StatusCode == HttpStatusCode.Conflict)
-                    {
-                        var choice = Prompts.PromptForKeyword("\tThere are already resources associated with this clientId. Do you want to delete them? [Yes/No]<No>");
-                        if (choice == "No")
-                        {
-                            return false;
-                        }
-                        await api.DeleteForgeAppAsync("me");
-                        // DeleteForgeAppAsync will lock our clientID for up to 60s. Let's wait that long before trying anything new.
-                        await Task.Delay(TimeSpan.FromSeconds(60));
-                        tryAgain = true;
-                    }
+                    Console.WriteLine("\tThere are already resources associated with this clientId or nickname is in use. Please use a different clientId or nickname.");
+                    return false;
                 }
-                while (tryAgain);
                 await resp.EnsureSuccessStatusCodeAsync();
             }
             return true;
