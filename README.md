@@ -7,7 +7,7 @@
 [![visual studio](https://img.shields.io/badge/visual%20studio-2017-yellowgreen.svg)](https://www.visualstudio.com/)
 [![License](https://img.shields.io/:license-mit-red.svg)](http://opensource.org/licenses/MIT)
 
-##Description
+## Description
 This is C# sample to demonstrate custom Activities and AppPackages creation. This is the most
 common use case that the Design Automation API can run the custom command (defined in the custom package) in the cloud. This sample uses `v3`, for the `v2` sample, please check [design.automation.v2](//github.com/Autodesk-Forge/design.automation-.net-custom.activity.sample/tree/design.automation.v2) branch
 
@@ -33,14 +33,23 @@ common use case that the Design Automation API can run the custom command (defin
   * Open [demo drawing](demofiles/demodrawing.dwg). Run command "netload", select the binary dll of CrxApp. Allow AutoCAD to load it.
   * Run command "test", select [demo json file](demofiles/demojson.json). Specify a output folder. 
   * Finally the blocks name list and layers name list will dumped out.
-2. Open project **Client**. Restore the packages of the project by [NuGet](https://www.nuget.org/. The simplest way is
+2. Open project **Client**. Restore the packages of the project by [NuGet](https://www.nuget.org/). The simplest way is
   * VS2012: Projects tab >> Enable NuGet Package Restore. Then right click the project>>"Manage NuGet Packages for Solution" >> "Restore" (top right of dialog)
   * VS2013/VS2015/2017:  right click the project>>"Manage NuGet Packages for Solution" >> "Restore" (top right of dialog)
-3. Put your Forge credentials in [program.cs](./Program.cs) 
-4. Run project **Client**, you will see a status in the console:
+3. Put your Forge credentials into an appsettings.user.json like this
+```
+{
+    "Forge": {
+        "ClientId" : "<your client id>",
+        "ClientSecret" : "<your client secret>"
+    }
+}
+```
+4. Replace the upload URL with your own [here](Client/App.cs#L59).
+5. Run project **Client**, you will see a status in the console:
 ![thumbnail](demofiles/IORunning.png)
-5. if everything works well,  the result zip file and the report files will be downloaded to **MyDocuments**. In zip file, blocks list and layers list are available.
-6. if there is any error with the process of work item, check the report file what error is indicated. 
+6. if everything works well,  the result zip file and the report files will be downloaded to **MyDocuments**. In zip file, blocks list and layers list are available.
+7. if there is any error with the process of work item, check the report file what error is indicated. 
 
 ## Troubleshooting
 * if any problem when building the project [CrxApp](CrxApp), check if the NET Framework of project is compatible with that of AutoCAD References. e.g. with AutoCAD 2018 references, the NET Framework is 4.6.1
@@ -50,7 +59,7 @@ common use case that the Design Automation API can run the custom command (defin
 
 
 ## Further Reading 
-* [Design Automation API help](https://forge.autodesk.com/en/docs/design-automation/v2/developers_guide/overview/)
+* [Design Automation API help](https://forge.autodesk.com/en/docs/design-automation/v3/developers_guide/overview/)
  * [ Intro to Design Automation API Video](https://www.youtube.com/watch?v=GWsJM344CJE&t=107s)
 
 ## License

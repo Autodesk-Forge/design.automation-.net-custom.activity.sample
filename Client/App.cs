@@ -193,6 +193,8 @@ namespace Client
                             return false;
                         }
                         await api.DeleteForgeAppAsync("me");
+                        // DeleteForgeAppAsync will lock our clientID for up to 60s. Let's wait that long before trying anything new.
+                        await Task.Delay(TimeSpan.FromSeconds(60));
                         tryAgain = true;
                     }
                 }
