@@ -1,4 +1,4 @@
-# Design Automation API for AutoCAD - Create custom Activity and AppPackage
+# Design Automation API for AutoCAD - Create custom Activity and AppBundle
 
 
 [![.NET](https://img.shields.io/badge/.NET-4.7-green.svg)](http://www.microsoft.com/en-us/download/details.aspx?id=30653)
@@ -8,7 +8,7 @@
 [![License](https://img.shields.io/:license-mit-red.svg)](http://opensource.org/licenses/MIT)
 
 ## Description
-This is C# sample to demonstrate custom Activities and AppPackages creation. This is the most
+This is C# sample to demonstrate custom Activities and AppBundle creation. This is the most
 common use case that the Design Automation API can run the custom command (defined in the custom package) in the cloud. This sample uses `v3`, for the `v2` sample, please check [design.automation.v2](//github.com/Autodesk-Forge/design.automation-.net-custom.activity.sample/tree/design.automation.v2) branch
 
 ## Thumbnail
