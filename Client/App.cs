@@ -61,7 +61,7 @@ namespace Client
         private async Task SubmitWorkItemAsync(string myActivity)
         {
             Console.WriteLine("Submitting up workitem...");
-            var workItemStatus = await api.CreateWorkItemsAsync(new WorkItem()
+            var workItemStatus = await api.CreateWorkItemAsync(new WorkItem()
             {
                 ActivityId = myActivity,
                 Arguments = new Dictionary<string, IArgument>()
