@@ -65,10 +65,10 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Autodesk.Forge.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autodesk.Forge.Core.1.0.0-beta1\lib\netstandard2.0\Autodesk.Forge.Core.dll</HintPath>
+      <HintPath>..\packages\Autodesk.Forge.Core.1.0.0\lib\netstandard2.0\Autodesk.Forge.Core.dll</HintPath>
     </Reference>
     <Reference Include="Autodesk.Forge.DesignAutomation, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autodesk.Forge.DesignAutomation.3.0.0-beta1\lib\netstandard2.0\Autodesk.Forge.DesignAutomation.dll</HintPath>
+      <HintPath>..\packages\Autodesk.Forge.DesignAutomation.3.0.0\lib\netstandard2.0\Autodesk.Forge.DesignAutomation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Configuration, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Configuration.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.dll</HintPath>

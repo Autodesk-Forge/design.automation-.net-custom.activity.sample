@@ -63,7 +63,7 @@ namespace Client
                     // our own app where all the real stuff happens
                     services.AddSingleton<App>();
 
-                    // add an configure DESIGN AUTOMATION
+                    // add and configure DESIGN AUTOMATION
                     services.AddDesignAutomation(hostContext.Configuration);
                 })
                 .UseConsoleLifetime()
