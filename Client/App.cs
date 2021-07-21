@@ -98,7 +98,7 @@ namespace Client
                     },
                 CommandLine = new List<string>()
                     {
-                        $"$(engine.path)\\accoreconsole.exe /i $(args[input].path) /al $(appbundles[{PackageName}].path) /s $(settings[script].path)"
+                        $"$(engine.path)\\accoreconsole.exe /i \"$(args[input].path)\" /al \"$(appbundles[{PackageName}].path)\" /s $(settings[script].path)"
                     },
                 Engine = TargetEngine,
                 Settings = new Dictionary<string, ISetting>()
